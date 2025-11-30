@@ -241,6 +241,10 @@ class Worker(WorkerHelper):
 
         # Prevent use of clashing `{CUDA/HIP/ROCR}_VISIBLE_DEVICES``
         rocr_val = os.environ.get("ROCR_VISIBLE_DEVICES", None)
+        print(f"rocr_val: {rocr_val}")
+        if rocr_val:
+            print("rocr_val is set, set to None")
+            rocr_val = None
         hip_val = os.environ.get("HIP_VISIBLE_DEVICES", None)
         cuda_val = os.environ.get("CUDA_VISIBLE_DEVICES", None)
         if hip_val:
