@@ -212,8 +212,11 @@ def copy_to_local(
     print(f"copy_to_local cache_dir: {cache_dir}")
     # Save to a local path for persistence.
     local_path = copy_local_path_from_hdfs(src, cache_dir, filelock, verbose, always_recopy)
+    print(f"fs local path: {local_path}")
+    print(f"use_shm: {use_shm}")
 
     if use_shm and isinstance(local_path, str) and not os.path.exists(local_path):
+        print(f"use_shm and local_path does not exist, download from Hugging Face")
         try:
             from huggingface_hub import snapshot_download
 
