@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-export VERL_HOME=${VERL_HOME:-"${HOME}/verl"}
-export TRAIN_FILE=${TRAIN_FILE:-"${VERL_HOME}/data/acemath_rl_30b_a3b_inst_hard_train.parquet"}
-export TEST_FILE=${TEST_FILE:-"${VERL_HOME}/data/acemath_rl_30b_a3b_inst_hard_test.parquet"}
+DATA_DIR=/home/ianwu/data
+export TRAIN_FILE=${TRAIN_FILE:-"${DATA_DIR}/acemath_rl_30b_a3b_inst_hard_train.parquet"}
+export TEST_FILE=${TEST_FILE:-"${DATA_DIR}/acemath_rl_30b_a3b_inst_hard_test.parquet"}
 export OVERWRITE=${OVERWRITE:-0}
 
 mkdir -p "${VERL_HOME}/data"
