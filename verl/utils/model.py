@@ -439,6 +439,8 @@ def _load_hf_model(config, model_config, is_value_model):
             ]  # workaround, 32001 -> 32000
             is_value_model = True
         else:
+            print(f"from_pretrained local_model_path: {local_model_path}")
+            print("Downloading model from Hugging Face...")
             model = auto_cls.from_pretrained(
                 local_model_path,
                 torch_dtype="auto",
