@@ -398,6 +398,8 @@ class ActorRolloutRefWorker(MegatronWorker, DistProfilerExtension):
                 else:
                     if self.bridge is not None:
                         local_model_path = get_hf_model_path(self.config)
+                        print(f"local_model_path: {local_model_path}")
+                        print(f"env var HF_HOME: {os.environ.get('HF_HOME')}")
                         if self.vanilla_bridge:
                             self.bridge.load_weights(actor_module, local_model_path)
                         else:
