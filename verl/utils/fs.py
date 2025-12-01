@@ -208,6 +208,8 @@ def copy_to_local(
     Returns:
         str: Local filesystem path to copied resource
     """
+    print(f"copy_to_local src: {src}")
+    print(f"copy_to_local cache_dir: {cache_dir}")
     # Save to a local path for persistence.
     local_path = copy_local_path_from_hdfs(src, cache_dir, filelock, verbose, always_recopy)
 
