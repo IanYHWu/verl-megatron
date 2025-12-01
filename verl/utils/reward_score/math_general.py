@@ -39,9 +39,9 @@ class MathEvaluator:
         if candidate_answer is None:
             return {"result": False, "parsed": None}
 
-        parsed_candidate_answer = parse(candidate_answer)
-        parsed_gold_answer = parse(gold_answer)
-        evaluation_result = verify(parsed_candidate_answer, parsed_gold_answer)
+        parsed_candidate_answer = parse(candidate_answer, parsing_timeout=None)
+        parsed_gold_answer = parse(gold_answer, parsing_timeout=None)
+        evaluation_result = verify(parsed_candidate_answer, parsed_gold_answer, timeout_seconds=None)
         if isinstance(parsed_candidate_answer, list) and len(parsed_candidate_answer) > 1:
             return {"result": evaluation_result, "parsed": parsed_candidate_answer[1]}
         else:
