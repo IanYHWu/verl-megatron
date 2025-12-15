@@ -240,9 +240,9 @@ ray_kwargs:
 reasoning_cache:
   max_summary_tokens: 2048
   max_thinking_tokens: 2048
-  reasoning_prompt_path: /home/ianwu/code/verl-stable/projects/reasoning_cache/prompts/sum_e2e_reasoning_prompt.txt
-  summarization_prompt_path: /home/ianwu/code/verl-stable/projects/reasoning_cache/prompts/sum_e2e_summarization_prompt.txt
-  use_think_tags: True
+  reasoning_prompt_path: /home/ianwu/code/verl-megatron/projects/reasoning_cache/prompts/complete_reasoning_prompt.txt
+  summarization_prompt_path: /home/ianwu/code/verl-megatron/projects/reasoning_cache/prompts/complete_summarization_prompt.txt
+  use_think_tags: False
   online_rollout_steps: 2
   online_rollout_n_samples: 1
   online_rollout_steps_val: 2

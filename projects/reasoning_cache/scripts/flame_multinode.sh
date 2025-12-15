@@ -34,9 +34,9 @@ max_response_length=$((1024 * 16))
 
 loss_agg_mode="token-mean"
 
-train_prompt_bsz=8
+train_prompt_bsz=64
 n_resp_per_prompt=8
-train_prompt_mini_bsz=8
+train_prompt_mini_bsz=64
 train_ppo_micro_batch_size_per_gpu=1
 infer_ppo_micro_batch_size_per_gpu=2
 
@@ -66,7 +66,7 @@ COMMON_EP=${COMMON_EP:-16}
 COMMON_ETP=${COMMON_ETP:-1}
 
 TRAIN_TP=${TRAIN_TP:-$COMMON_TP}
-INFER_TP=${INFER_TP:-4}
+INFER_TP=${INFER_TP:-2}
 
 ACTOR_PP=${ACTOR_PP:-$COMMON_PP}
 ACTOR_VPP=${ACTOR_VPP:-$COMMON_VPP}
@@ -198,10 +198,10 @@ python3 -m projects.reasoning_cache.main_ppo_reasoning_cache --config-name='ppo_
     actor_rollout_ref.actor.loss_agg_mode=${loss_agg_mode} \
     actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=${infer_ppo_micro_batch_size_per_gpu} \
     actor_rollout_ref.rollout.log_prob_max_token_len_per_gpu=${infer_ppo_max_token_len} \
-    actor_rollout_ref.rollout.gpu_memory_utilization=0.7 \
+    actor_rollout_ref.rollout.gpu_memory_utilization=0.8 \
     actor_rollout_ref.rollout.tensor_model_parallel_size=${INFER_TP} \
     actor_rollout_ref.rollout.enable_chunked_prefill=True \
-    actor_rollout_ref.rollout.max_num_batched_tokens=$((max_prompt_length + max_response_length)) \
+    actor_rollout_ref.rollout.max_num_batched_tokens=40000 \
     actor_rollout_ref.rollout.temperature=${temperature} \
     actor_rollout_ref.rollout.top_p=${top_p} \
     actor_rollout_ref.rollout.top_k=${top_k} \
@@ -231,7 +231,7 @@ python3 -m projects.reasoning_cache.main_ppo_reasoning_cache --config-name='ppo_
     trainer.n_gpus_per_node=8 \
     trainer.nnodes=2 \
     trainer.val_before_train=False \
-    trainer.test_freq=50 \
+    trainer.test_freq=150 \
     trainer.save_freq=10 \
     trainer.total_epochs=10 \
     trainer.resume_mode=disable \
@@ -249,7 +249,7 @@ python3 -m projects.reasoning_cache.main_ppo_reasoning_cache --config-name='ppo_
     reasoning_cache.online_rollout_n_samples_val=4 \
     reasoning_cache.thinking_train_samples_per_online_rollout=2 \
     reasoning_cache.summary_train_samples_per_online_rollout=0 \
-    reasoning_cache.thinking_train_n_samples=2 \
+    reasoning_cache.thinking_train_n_samples=8 \
     reasoning_cache.summary_train_n_samples=2 \
     reasoning_cache.thinking_reward_rollout_steps=0 \
     reasoning_cache.summary_reward_rollout_steps=0 \
