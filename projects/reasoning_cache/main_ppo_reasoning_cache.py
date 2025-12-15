@@ -33,6 +33,22 @@ from verl.utils.import_utils import load_extern_type
 
 from projects.reasoning_cache.ray_reasoning_cache_trainer import RayPPOTrainer
 
+from hydra.core.global_hydra import GlobalHydra
+from hydra import initialize_config_dir, compose
+from hydra.core.plugins import Plugins
+from hydra.plugins.search_path_plugin import SearchPathPlugin
+
+
+
+class VerlConfigSearchPathPlugin(SearchPathPlugin):
+    def manipulate_search_path(self, search_path):
+        search_path.append(
+            provider="verl",
+            path="pkg://verl.trainer.config"
+        )
+
+Plugins.instance().register(VerlConfigSearchPathPlugin)
+
 
 @hydra.main(config_path="config", config_name="ppo_trainer", version_base=None)
 def main(config):
