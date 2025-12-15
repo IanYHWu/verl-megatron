@@ -1,5 +1,5 @@
-from typing import List, Union, Dict
 import re
+from typing import Dict, List, Union
 
 from math_verify import parse, verify
 
