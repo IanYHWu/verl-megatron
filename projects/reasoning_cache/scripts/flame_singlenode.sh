@@ -1,7 +1,3 @@
-NNODES=1
-NGPUS_PER_NODES=8
-
-echo "Using $NNODES nodes for training..."
 
 project_name='reasoning_cache'
 exp_name='vanilla_grpo_16k_inst_hard_30b_sync'
@@ -173,8 +169,8 @@ python3 -m projects.reasoning_cache.main_ppo_reasoning_cache --config-name='ppo_
     trainer.logger=['console','wandb'] \
     trainer.project_name=\"${project_name}\" \
     trainer.experiment_name=\"${exp_name}\" \
-    trainer.n_gpus_per_node=\"${NGPUS_PER_NODES}\" \
-    trainer.nnodes=\"${NNODES}\" \
+    trainer.n_gpus_per_node=8 \
+    trainer.nnodes=1 \
     trainer.val_before_train=False \
     trainer.test_freq=50 \
     trainer.save_freq=10 \
