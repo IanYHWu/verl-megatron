@@ -84,7 +84,7 @@ def validate_config(
         use_critic (bool): is critic needed
     """
     # number of GPUs total
-    n_gpus = config.trainer.n_gpus_per_node * config.trainer.nnodes
+    n_gpus = int(config.trainer.n_gpus_per_node) * int(config.trainer.nnodes)
 
     if not config.actor_rollout_ref.actor.use_dynamic_bsz:
         if config.actor_rollout_ref.actor.strategy == "megatron":
