@@ -476,17 +476,30 @@ class ReasoningCacheRolloutGenerator:
         prompts_batch: DataProto, 
         n: int,
         max_length: int,
-    ) -> Tuple[DataProto, Dict[str, Any]]:
+    ) -> DataProto:
         """
         Generate rollouts for reasoning cache.
+        
+        Args:
+            prompts_batch: DataProto containing the prompts
+            n: Number of repeated generations per prompt (handled by repeating prompts)
+            max_length: Maximum response length (passed via meta_info["max_new_tokens"])
+        
+        Returns:
+            DataProto containing the generated rollouts
         """
+        if n > 1:
+            prompts_batch = prompts_batch.repeat(repeat_times=n, interleave=True)
+
+        print(f"prompts_batch after repeat n={n}: {prompts_batch}")
+        
         prompts_batch_padded, pad_size = pad_dataproto_to_divisor(
             prompts_batch, self.actor_rollout_wg.world_size
         )
-        prompts_batch_padded.meta_info["sampling_params"] = {
-                "n": n,
-                "max_tokens": max_length,
-        }
+        
+        # Set max_new_tokens via meta_info (supported by vLLM/SGLang rollouts)
+        prompts_batch_padded.meta_info["max_new_tokens"] = max_length
+        
         rollouts = self.actor_rollout_wg.generate_sequences(
             prompts_batch_padded
         )

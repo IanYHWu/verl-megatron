@@ -34,9 +34,9 @@ max_response_length=$((1024 * 16))
 
 loss_agg_mode="token-mean"
 
-train_prompt_bsz=64
+train_prompt_bsz=8
 n_resp_per_prompt=8
-train_prompt_mini_bsz=64
+train_prompt_mini_bsz=8
 train_ppo_micro_batch_size_per_gpu=1
 infer_ppo_micro_batch_size_per_gpu=2
 
@@ -249,7 +249,7 @@ python3 -m projects.reasoning_cache.main_ppo_reasoning_cache --config-name='ppo_
     reasoning_cache.online_rollout_n_samples_val=4 \
     reasoning_cache.thinking_train_samples_per_online_rollout=2 \
     reasoning_cache.summary_train_samples_per_online_rollout=0 \
-    reasoning_cache.thinking_train_n_samples=8 \
+    reasoning_cache.thinking_train_n_samples=2 \
     reasoning_cache.summary_train_n_samples=2 \
     reasoning_cache.thinking_reward_rollout_steps=0 \
     reasoning_cache.summary_reward_rollout_steps=0 \
