@@ -717,7 +717,11 @@ class ReasoningCacheRolloutGenerator:
         n: int
     ):
         decoded_responses = self.tokenizer.batch_decode(rollouts.batch["responses"], skip_special_tokens=True)
-        assert len(decoded_responses) == len(active_states) * n
+        if len(decoded_responses) != len(active_states) * n:
+            print(f"n: {n}")
+            print(f"len(active_states): {len(active_states)}")
+            print(f"len(decoded_responses): {len(decoded_responses)} != len(active_states) * n: {len(active_states) * n}")
+            raise ValueError(f"Mismatch in number of rollouts and active states")
         if n > 1:
             active_states = self.broadcast_states(active_states, n)
 

@@ -16,9 +16,9 @@ max_response_length=$((1024 * 16))
 
 loss_agg_mode="token-mean"
 
-train_prompt_bsz=64
+train_prompt_bsz=8
 n_resp_per_prompt=8
-train_prompt_mini_bsz=32
+train_prompt_mini_bsz=8
 train_ppo_micro_batch_size_per_gpu=1
 infer_ppo_micro_batch_size_per_gpu=2
 
@@ -44,7 +44,7 @@ COMMON_PP=${COMMON_PP:-1}
 COMMON_VPP=${COMMON_VPP:-null}
 COMMON_CP=${COMMON_CP:-1}
 COMMON_TP=${COMMON_TP:-4}
-COMMON_EP=${COMMON_EP:-16}
+COMMON_EP=${COMMON_EP:-8}
 COMMON_ETP=${COMMON_ETP:-1}
 
 TRAIN_TP=${TRAIN_TP:-$COMMON_TP}
