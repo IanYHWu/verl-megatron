@@ -35,7 +35,7 @@ max_response_length=$((1024 * 16))
 loss_agg_mode="token-mean"
 
 train_prompt_bsz=64
-n_resp_per_prompt=8
+n_resp_per_prompt=1
 train_prompt_mini_bsz=64
 train_ppo_micro_batch_size_per_gpu=1
 infer_ppo_micro_batch_size_per_gpu=2
@@ -52,8 +52,8 @@ top_k=-1
 val_top_p=1.0
 
 use_dynamic_bsz=True
-actor_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
-infer_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
+actor_ppo_max_token_len=26000
+infer_ppo_max_token_len=26000
 offload=True
 
 optimizer_offload_fraction=${OFFLOAD_FRACTION:-1.}
@@ -62,12 +62,11 @@ COMMON_PP=${COMMON_PP:-1}
 COMMON_VPP=${COMMON_VPP:-null}
 COMMON_CP=${COMMON_CP:-1}
 COMMON_TP=${COMMON_TP:-4}
-COMMON_EP=${COMMON_EP:-8}
+COMMON_EP=${COMMON_EP:-16}
 COMMON_ETP=${COMMON_ETP:-1}
 
 TRAIN_TP=${TRAIN_TP:-$COMMON_TP}
-INFER_TP=${INFER_TP:-2}
-INFER_DP=${INFER_DP:-12}
+INFER_TP=${INFER_TP:-4}
 
 ACTOR_PP=${ACTOR_PP:-$COMMON_PP}
 ACTOR_VPP=${ACTOR_VPP:-$COMMON_VPP}
@@ -201,9 +200,8 @@ python3 -m projects.reasoning_cache.main_ppo_reasoning_cache --config-name='ppo_
     actor_rollout_ref.rollout.log_prob_max_token_len_per_gpu=${infer_ppo_max_token_len} \
     actor_rollout_ref.rollout.gpu_memory_utilization=0.8 \
     actor_rollout_ref.rollout.tensor_model_parallel_size=${INFER_TP} \
-    actor_rollout_ref.rollout.data_parallel_size=${INFER_DP} \
     actor_rollout_ref.rollout.enable_chunked_prefill=True \
-    actor_rollout_ref.rollout.max_num_batched_tokens=40000 \
+    actor_rollout_ref.rollout.max_num_batched_tokens=34000 \
     actor_rollout_ref.rollout.temperature=${temperature} \
     actor_rollout_ref.rollout.top_p=${top_p} \
     actor_rollout_ref.rollout.top_k=${top_k} \
@@ -231,7 +229,7 @@ python3 -m projects.reasoning_cache.main_ppo_reasoning_cache --config-name='ppo_
     trainer.project_name=\"${project_name}\" \
     trainer.experiment_name=\"${exp_name}\" \
     trainer.n_gpus_per_node=8 \
-    trainer.nnodes=3 \
+    trainer.nnodes=2 \
     trainer.val_before_train=False \
     trainer.test_freq=150 \
     trainer.save_freq=10 \
