@@ -503,7 +503,7 @@ class ReasoningCacheRolloutGenerator:
         rollouts = self.actor_rollout_wg.generate_sequences(
             prompts_batch_padded
         )
-        rollouts = unpad_dataproto(rollouts, pad_size * n)
+        rollouts = unpad_dataproto(rollouts, pad_size)
         return rollouts
 
     def prepare_for_inference(self, prompts: List[str], enable_thinking: bool):
