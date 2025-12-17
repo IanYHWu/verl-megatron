@@ -20,6 +20,7 @@ This trainer supports model-agonistic model initialization with huggingface
 
 import json
 import os
+import random
 import uuid
 from collections import defaultdict
 from copy import deepcopy
@@ -442,7 +443,7 @@ class RayPPOTrainer:
             print(f"Warning: Could not set total_training_steps in config. Structure missing? Error: {e}")
 
     def _dump_generations(self, inputs, outputs, gts, scores, reward_extra_infos_dict, dump_path):
-        """Dump rollout/validation samples as JSONL."""
+        """Dump rollout/validation samples as JSONL (max 5 randomly sampled)."""
         os.makedirs(dump_path, exist_ok=True)
         filename = os.path.join(dump_path, f"{self.global_steps}.jsonl")
 
@@ -459,15 +460,19 @@ class RayPPOTrainer:
             if len(v) == n:
                 base_data[k] = v
 
+        # Randomly sample up to 5 indices
+        num_samples = min(n, 5)
+        sampled_indices = random.sample(range(n), num_samples)
+
         lines = []
-        for i in range(n):
+        for i in sampled_indices:
             entry = {k: v[i] for k, v in base_data.items()}
             lines.append(json.dumps(entry, ensure_ascii=False))
 
         with open(filename, "w") as f:
             f.write("\n".join(lines) + "\n")
 
-        print(f"Dumped generations to {filename}")
+        print(f"Dumped {num_samples} generations (out of {n}) to {filename}")
 
     def _log_rollout_data(
         self, batch: DataProto, reward_extra_infos_dict: dict, timing_raw: dict, rollout_data_dir: str
@@ -1121,7 +1126,6 @@ class RayPPOTrainer:
                 n_gpus = self.resource_pool_manager.get_n_gpus()
                 metrics.update(compute_throughout_metrics(batch=batch, timing_raw=timing_raw, n_gpus=n_gpus))
                 # Note: mismatch metrics (KL, PPL, etc.) are collected at line 1179 after advantage computation
-
                 # this is experimental and may be changed/removed in the future in favor of a general-purpose one
                 if isinstance(self.train_dataloader.sampler, AbstractCurriculumSampler):
                     self.train_dataloader.sampler.update(batch=batch)
