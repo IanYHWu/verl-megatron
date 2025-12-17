@@ -112,7 +112,8 @@ ray job submit --address="http://${head_node_ip}:${RAY_DASHBOARD_PORT}" \
       "TRANSFORMERS_CACHE": "/project/flame/ianwu/huggingface/",
       "TMPDIR": "/tmp/ianwu/tmp",
       "TEMP": "/tmp/ianwu/tmp",
-      "TMP": "/tmp/ianwu/tmp"
+      "TMP": "/tmp/ianwu/tmp",
+      "TRITON_CACHE_DIR": "/tmp/ianwu/triton_cache"
     }
   }' \
   -- bash -c "
@@ -126,6 +127,7 @@ mkdir -p /tmp/ianwu/tmp
 mkdir -p /tmp/ianwu/checkpoints
 mkdir -p /tmp/ianwu/rollouts
 mkdir -p /tmp/ianwu/huggingface
+mkdir -p /tmp/ianwu/triton_cache
 
 export TMPDIR=/tmp/ianwu/tmp
 export TEMP=/tmp/ianwu/tmp
@@ -133,7 +135,7 @@ export TMP=/tmp/ianwu/tmp
 export RAY_TMPDIR=/tmp/ianwu/tmp
 export TRANSFORMERS_CACHE=/tmp/ianwu/huggingface
 export HF_HOME=/tmp/ianwu/huggingface
-
+export TRITON_CACHE_DIR=/tmp/ianwu/triton_cache
 unset ROCR_VISIBLE_DEVICES
 
 # Activate conda and run

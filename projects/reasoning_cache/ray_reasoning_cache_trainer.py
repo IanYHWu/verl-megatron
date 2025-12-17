@@ -442,7 +442,7 @@ class RayPPOTrainer:
         except Exception as e:
             print(f"Warning: Could not set total_training_steps in config. Structure missing? Error: {e}")
 
-    def _dump_generations(self, inputs, outputs, gts, scores, reward_extra_infos_dict, dump_path):
+    def _dump_generations(self, inputs, outputs, dump_path):
         """Dump rollout/validation samples as JSONL (max 5 randomly sampled)."""
         os.makedirs(dump_path, exist_ok=True)
         filename = os.path.join(dump_path, f"{self.global_steps}.jsonl")
@@ -451,16 +451,7 @@ class RayPPOTrainer:
         base_data = {
             "input": inputs,
             "output": outputs,
-            "gts": gts,
-            "score": scores,
-            "step": [self.global_steps] * n,
         }
-
-        for k, v in reward_extra_infos_dict.items():
-            if len(v) == n:
-                base_data[k] = v
-
-        # Randomly sample up to 5 indices
         num_samples = min(n, 5)
         sampled_indices = random.sample(range(n), num_samples)
 
@@ -487,22 +478,10 @@ class RayPPOTrainer:
         with marked_timer("dump_rollout_generations", timing_raw, color="green"):
             inputs = self.tokenizer.batch_decode(batch.batch["prompts"], skip_special_tokens=True)
             outputs = self.tokenizer.batch_decode(batch.batch["responses"], skip_special_tokens=True)
-            scores = batch.batch["rewards"].sum(-1).cpu().tolist()
-            sample_gts = [item.non_tensor_batch.get("reward_model", {}).get("ground_truth", None) for item in batch]
-
-            reward_extra_infos_to_dump = reward_extra_infos_dict.copy()
-            if "request_id" in batch.non_tensor_batch:
-                reward_extra_infos_dict.setdefault(
-                    "request_id",
-                    batch.non_tensor_batch["request_id"].tolist(),
-                )
 
             self._dump_generations(
                 inputs=inputs,
                 outputs=outputs,
-                gts=sample_gts,
-                scores=scores,
-                reward_extra_infos_dict=reward_extra_infos_to_dump,
                 dump_path=rollout_data_dir,
             )
 
