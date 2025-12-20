@@ -407,6 +407,7 @@ class DataParallelPPOActor(BasePPOActor):
 
         metrics = {}
         for _ in range(self.config.ppo_epochs):
+            print(f"Mini batch size: {len(mini_batches)}")
             for batch_idx, mini_batch in enumerate(mini_batches):
                 if self.config.use_dynamic_bsz:
                     max_token_len = self.config.ppo_max_token_len_per_gpu * self.ulysses_sequence_parallel_size

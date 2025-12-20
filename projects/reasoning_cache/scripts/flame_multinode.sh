@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Ray cluster configuration
-RAY_PORT=6387
-RAY_DASHBOARD_PORT=8272
+RAY_PORT=6388
+RAY_DASHBOARD_PORT=8273
 
 # Get head node IP
 head_node_ip=$(hostname -I | tr ' ' '\n' | grep '^10\.16\.' | head -n 1)
@@ -46,7 +46,7 @@ RAY_DATA_HOME="/home/ianwu/data"
 TRAIN_FILE=$RAY_DATA_HOME/acemath_rl_30b_a3b_inst_hard_train.parquet
 TEST_FILE=$RAY_DATA_HOME/acemath_rl_30b_a3b_inst_hard_test.parquet
 
-temperature=1.0
+temperature=0.9
 top_p=1.0
 top_k=-1
 val_top_p=1.0
@@ -160,7 +160,7 @@ python3 -m projects.reasoning_cache.main_ppo_reasoning_cache --config-name='ppo_
     actor_rollout_ref.actor.clip_ratio_low=${clip_ratio_low} \
     actor_rollout_ref.actor.clip_ratio_high=${clip_ratio_high} \
     actor_rollout_ref.actor.clip_ratio_c=10.0 \
-    +actor_rollout_ref.model.override_config.model_config.max_position_embeddings=$((max_prompt_length + max_response_length)) \
+    +actor_rollout_ref.model.override_config.model_config.max_position_embeddings=21000 \
     actor_rollout_ref.model.use_fused_kernels=False \
     actor_rollout_ref.actor.use_dynamic_bsz=${use_dynamic_bsz} \
     actor_rollout_ref.actor.ppo_mini_batch_size=${train_prompt_mini_bsz} \
